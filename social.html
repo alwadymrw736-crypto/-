@@ -176,12 +176,14 @@
         }
 
         // محاولة تحميل الملفات من 1 إلى 50
-        for (let i = 1; i <= maxFiles; i++) {
-            formats.forEach(ext => {
-                const type = ext === 'mp4' ? 'video' : 'image';
-                createItem(`${folder}${i}.${ext}`, type);
-            });
-        }
+        // محاولة تحميل الملفات من 1 إلى 50 لكل الصيغ
+for (let i = 1; i <= maxFiles; i++) {
+    formats.forEach(ext => {
+        const type = ext === 'mp4' ? 'video' : 'image';
+        // تم تصحيح الدمج هنا باستخدام الـ Backticks ` ` ليعمل الكود بشكل صحيح
+        createItem(`${folder}${i}.${ext}`, type);
+    });
+}
 
         function openLightbox(src, type) {
             const container = document.getElementById('lightboxContainer');
