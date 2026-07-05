@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض السوشال ميديا الذكي | عمرو العواضي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050b08;
+            --text: #f4efe6;
+            --gold: #caa463;
+            --line: rgba(244,239,230,.1);
+            --radius: 20px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f3f0e9;
+            --text: #0d1410;
+            --line: rgba(13,20,16,.1);
+        }
+
+        * { box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .nav-header {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            padding: 20px; backdrop-filter: blur(15px);
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--line);
+            background: rgba(5, 11, 8, 0.7);
+        }
+
+        .back-link {
+            text-decoration: none; color: var(--text); font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .page-title { font-weight: 900; font-size: 1.2rem; }
+
+        .gallery-container {
+            padding: 120px 20px 60px;
+            max-width: 1400px; margin: 0 auto;
+        }
+
+        /* شبكة مرنة */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-rows: 10px;
+            gap: 20px;
+        }
+
+        .grid-item {
+            grid-row-end: span 20; /* افتراضي */
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--line);
+            position: relative;
+            display: none; /* مخفي حتى يتم التأكد من وجود الصورة */
+            cursor: pointer;
+        }
+
+        .grid-item img, .grid-item video {
+            width: 100%;
+            display: block;
+            border-radius: var(--radius);
+            transition: transform 0.5s ease;
+        }
+
+        .grid-item:hover img, .grid-item:hover video {
+            transform: scale(1.03);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; padding: 20px; cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox.active { display: flex; }
+
+        .lightbox-content {
+            max-width: 90vw; max-height: 90vh;
+            border-radius: 10px;
+        }
+
+        .close-lightbox {
+            position: absolute; top: 30px; right: 30px;
+            color: white; font-size: 40px; cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .masonry-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <a href="portfolio_improved.html" class="back-link">← العودة</a>
+        <div class="page-title">SOCIAL MEDIA CONTENT</div>
+        <div style="width: 50px;"></div>
+    </header>
+
+    <div class="gallery-container">
+        <div class="masonry-grid" id="mainGrid">
+            <!-- سيتم ملء المحتوى برمجياً -->
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox">×</span>
+        <div id="lightboxContainer"></div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('mainGrid');
+        const maxFiles = 50; // الحد الأقصى لكل نوع
+        const formats = ['jpg', 'png', 'mp4'];
+        const folder = 'images/'; // تأكد أن صورك داخل مجلد اسمه images
+
+        // وظيفة لإضافة عنصر للشبكة
+        function createItem(src, type) {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            
+            let media;
+            if (type === 'video') {
+                media = document.createElement('video');
+                media.src = src;
+                media.muted = true;
+                media.loop = true;
+                media.onmouseover = () => media.play();
+                media.onmouseout = () => media.pause();
+            } else {
+                media = document.createElement('img');
+                media.src = src;
+            }
+
+            media.onload = () => {
+                item.style.display = 'block';
+                // تعديل الارتفاع بناءً على حجم الصورة (Masonry Effect)
+                const height = media.naturalHeight || 500;
+                const width = media.naturalWidth || 500;
+                const span = Math.ceil((height / width) * 25);
+                item.style.gridRowEnd = `span ${span}`;
+            };
+
+            media.onloadedmetadata = () => {
+                item.style.display = 'block';
+                item.style.gridRowEnd = `span 25`;
+            };
+
+            // إخفاء العنصر إذا فشل التحميل (الصورة غير موجودة)
+            media.onerror = () => {
+                item.remove();
+            };
+
+            item.onclick = (e) => {
+                e.stopPropagation();
+                openLightbox(src, type);
+            };
+
+            item.appendChild(media);
+            grid.appendChild(item);
+        }
+
+        // محاولة تحميل الملفات من 1 إلى 50
+        for (let i = 1; i <= maxFiles; i++) {
+            formats.forEach(ext => {
+                const type = ext === 'mp4' ? 'video' : 'image';
+                createItem(`${folder}${i}.${ext}`, type);
+            });
+        }
+
+        function openLightbox(src, type) {
+            const container = document.getElementById('lightboxContainer');
+            container.innerHTML = '';
+            if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = src;
+                video.controls = true;
+                video.autoplay = true;
+                video.className = 'lightbox-content';
+                container.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'lightbox-content';
+                container.appendChild(img);
+            }
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.getElementById('lightboxContainer').innerHTML = '';
+        }
+
+        // استعادة الثيم
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>عمرو العواضي | بورتفوليو رقمي فاخر</title>
+  
+  <!-- استدعاء الخطوط الاحترافية العالمية -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root{
+      --bg:#050b08;
+      --bg-2:#09120e;
+      --bg-3:#0d1a14;
+      --card:rgba(18, 33, 27, 0.65);
+      --card-2:rgba(23, 40, 32, 0.85);
+      --text:#f4efe6;
+      --muted:#8fa397;
+      --line:rgba(244,239,230,.08);
+      --gold:#caa463;
+      --gold-2:#e2c788;
+      --green:#4f9f84;
+      --shadow:0 30px 70px rgba(0,0,0,.45);
+      --radius:24px;
+      --sidebar:290px;
+      --font-ar: 'Cairo', sans-serif;
+      --font-en: 'Syne', sans-serif;
+    }
+    
+    [data-theme="light"]{
+      --bg:#f3f0e9;
+      --bg-2:#ffffff;
+      --bg-3:#f9f7f2;
+      --card:rgba(255, 255, 255, 0.75);
+      --card-2:rgba(243, 238, 230, 0.9);
+      --text:#0d1410;
+      --muted:#54635a;
+      --line:rgba(13,20,16,.08);
+      --shadow:0 20px 50px rgba(9,18,14,.08);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    
+    body{
+      margin:0;
+      background-color:var(--bg);
+      color:var(--text);
+      font-family:var(--font-ar);
+      line-height:1.7;
+      overflow-x:hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+    
+    a{color:inherit;text-decoration:none}
+    button{font:inherit;cursor:pointer;border:none;background:none;}
+    img,video{display:block;max-width:100%}
+    .container{max-width:1280px;margin:0 auto;padding:0 24px}
+
+    /* الخلفية المتحركة الناعمة */
+    .bg-animation {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; overflow: hidden; pointer-events: none;
+    }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      filter: blur(60px); opacity: 0.12;
+      transition: opacity 0.4s ease;
+    }
+    .p-1 { width: 400px; height: 400px; top: -10%; left: -10%; }
+    .p-2 { width: 500px; height: 500px; bottom: -20%; right: -10%; }
+    .p-3 { width: 300px; height: 300px; top: 40%; left: 50%; opacity: 0.07; }
+
+    /* القائمة الجانبية المستقرة والثابتة للكمبيوتر */
+    .sidebar{
+      position:fixed; 
+      top:0; bottom:0;
+      right:0; 
+      width:var(--sidebar); background:var(--bg-2);
+      border-left:1px solid var(--line); padding:26px 20px;
+      display:flex; flex-direction:column; z-index:100;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
+      overflow-y:auto;
+    }
+    
+    html[dir="ltr"] .sidebar { right: auto; left: 0; border-left: 0; border-right: 1px solid var(--line); }
+    
+    .brand{
+      display:flex; align-items:center; gap:14px;
+      padding:12px 10px 22px; border-bottom:1px solid var(--line); margin-bottom:22px;
+    }
+    .brand-mark{
+      width:46px; height:46px; border-radius:14px;
+      background:linear-gradient(135deg, var(--gold), var(--green));
+      color:#050b08; font-weight:900; font-size:22px;
+      display:grid; place-items:center; box-shadow: 0 10px 25px rgba(202,164,99,0.25);
+    }
+    .brand-name{font-weight:900; font-size:18px; letter-spacing:-0.5px;}
+    .brand-role{color:var(--muted); font-size:12px; margin-top:2px;}
+    
+    .nav{display:flex; flex-direction:column; gap:6px; flex:1; padding:10px 0;}
+    .nav a{
+      border:1px solid transparent; border-radius:16px;
+      padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+      color:var(--muted); font-weight:600; transition:.3s ease;
+      cursor:pointer;
+    }
+    .nav a.active, .nav a:hover{
+      background:linear-gradient(135deg, rgba(202,164,99,.12), rgba(79,159,132,.08));
+      color:var(--text); border-color:var(--line);
+    }
+
+    .sidebar-controls {
+      margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      padding-top: 20px; border-top: 1px solid var(--line);
+    }
+    .ctrl-btn {
+      height: 44px; border-radius: 12px; border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02); color:var(--text); font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.3s ease; font-size: 13px;
+    }
+    .ctrl-btn:hover { border-color: var(--gold); background: rgba(202,164,99,0.05); }
+
+    /* محتوى الصفحة الرئيسي */
+    .main{flex:1; min-width:0; margin-right:var(--sidebar); transition: all 0.3s ease;}
+    html[dir="ltr"] .main { margin-right: 0; margin-left: var(--sidebar); }
+    
+    .topbar{
+      position:sticky; top:0; z-index:60; backdrop-filter:blur(20px);
+      background:rgba(5, 11, 8, 0.75); border-bottom:1px solid var(--line);
+      min-height:76px; display:flex; align-items:center; justify-content:space-between; padding:0 24px;
+      transition: background-color 0.4s ease;
+    }
+    [data-theme="light"] .topbar { background:rgba(243, 240, 233, 0.8); }
+    
+    .menu-toggle{
+      display:none; width:44px; height:44px; border-radius:14px;
+      align-items:center; justify-content:center;
+      border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--text);
+      font-size: 20px; transition: all 0.3s ease;
+    }
+
+    section{ padding:80px 0; border-bottom:1px solid var(--line); transition: all 0.3s ease; }
+
+    .eyebrow{color:var(--gold); font-size:12px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; margin-bottom:12px; display:block;}
+    h1{font-size:clamp(34px, 5.5vw, 64px); font-weight:900; line-height:1.3; margin:0;}
+    h2{font-size:clamp(26px, 3.5vw, 40px); font-weight:800; margin:0 0 24px 0;}
+    p.lead{font-size:18px; color:var(--muted); margin:24px 0; line-height:1.8;}
+    
+    .hero-grid, .about-split, .contact-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:center; }
+    .services-grid, .portfolio-pages-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:34px; }
+    
+    .glass-card{
+      background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:30px;
+      box-shadow:var(--shadow); backdrop-filter: blur(12px);
+      transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .glass-card:hover { transform: translateY(-6px); border-color: rgba(202,164,99,0.3); }
+    
+    .primary-btn, .secondary-btn{
+      height:52px; padding:0 28px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; gap:10px; font-weight:700;
+      transition: all 0.3s ease;
+    }
+    .primary-btn{ background:linear-gradient(135deg, var(--gold), var(--gold-2)); color:#171208; }
+    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(202,164,99,0.3); }
+    .secondary-btn{ background:rgba(255,255,255,.02); border:1px solid var(--line); color:var(--text); }
+    .secondary-btn:hover { background:rgba(202,164,99,.08); border-color:var(--gold); }
+    
+    .hero-actions, .contact-actions{ display:flex; gap:14px; margin-top:24px; }
+
+    .page-card { display: block; text-decoration: none; }
+    .page-card h3 { color: var(--gold-2); font-weight: 800; margin: 0 0 12px 0; font-size: 20px; }
+    .page-card p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    .premium-contact-card {
+      background: linear-gradient(180deg, var(--card-2), var(--card));
+      border: 1px solid var(--line); border-radius: var(--radius); padding: 36px;
+      transition: all 0.3s ease;
+    }
+    .premium-contact-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(202,164,99,0.4);
+      box-shadow: 0 20px 60px rgba(202,164,99,0.15);
+    }
+    .contact-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 60px; height: 60px; border-radius: 16px; margin-bottom: 20px;
+      font-size: 28px; color: #fff; font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .premium-contact-card:hover .contact-badge {
+      transform: scale(1.1) rotate(5deg);
+    }
+    .wa-badge { background: linear-gradient(135deg, #25D366, #128c7e); }
+    .mail-badge { background: linear-gradient(135deg, #ea4335, #c53429); }
+    .phone-badge { background: linear-gradient(135deg, #4285F4, #1f73e7); }
+
+    .action-link-btn {
+      width: 100%; height: 50px; border-radius: 14px; font-weight: 700; font-size: 15px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all 0.3s ease; color: #fff;
+    }
+    .wa-link { background: linear-gradient(135deg, #25D366, #128c7e); }
+    .wa-link:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4); }
+    .mail-link { background: linear-gradient(135deg, #ea4335, #c53429); }
+    .mail-link:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(234, 67, 53, 0.4); }
+    .phone-link { background: linear-gradient(135deg, #4285F4, #1f73e7); }
+    .phone-link:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(66, 133, 244, 0.4); }
+
+    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; z-index:90; backdrop-filter: blur(4px); }
+
+    footer {
+      padding:40px 0; text-align:center; color:var(--muted); font-size:14px; font-weight:600;
+      border-top: 1px solid var(--line);
+      transition: all 0.3s ease;
+    }
+
+    /* ==========================================
+       إصلاحات وضبط شاشات الجوال بشكل كامل وصحيح
+       ========================================== */
+    @media (max-width: 920px){
+      .menu-toggle{ display:inline-flex; }
+      .sidebar{ 
+        transform: translateX(100%);
+        width: 280px;
+      }
+      html[dir="ltr"] .sidebar { transform: translateX(-100%); } 
+      
+      .sidebar.open{ transform: translateX(0) !important; } 
+      .backdrop.show{ display:block; }
+      
+      .main{ margin-right: 0 !important; margin-left: 0 !important; }
+      .hero-grid, .about-split, .contact-grid, .services-grid, .portfolio-pages-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+    
+    @media (max-width: 680px){
+      .hero-actions, .contact-actions { flex-direction: column; gap: 10px; }
+      .primary-btn, .secondary-btn, .action-link-btn { width: 100%; }
+      .sidebar-controls { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    /* تحسينات الانتقال السلس */
+    * {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="bg-animation">
+    <div class="particle p-1"></div>
+    <div class="particle p-2"></div>
+    <div class="particle p-3"></div>
+  </div>
+
+  <div class="backdrop" id="backdrop" onclick="toggleMenu()"></div>
+
+  <!-- القائمة الجانبية -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">ع</div>
+      <div>
+        <div class="brand-name" data-i18n="brandName">عمرو العواضي</div>
+        <div class="brand-role" data-i18n="brandRole">مصمم جرافيك ومحتوى مرئي</div>
+      </div>
+    </div>
+    
+    <nav class="nav">
+      <a href="#home" class="nav-link active" data-section="home">
+        <span data-i18n="navHome">الرئيسية</span><span>01</span>
+      </a>
+      <a href="#about" class="nav-link" data-section="about">
+        <span data-i18n="navAbout">نبذة عني</span><span>02</span>
+      </a>
+      <a href="#services" class="nav-link" data-section="services">
+        <span data-i18n="navServices">الخدمات</span><span>03</span>
+      </a>
+      <a href="#portfolio-sections" class="nav-link" data-section="portfolio">
+        <span data-i18n="navPortfolio">أقسام الأعمال</span><span>04</span>
+      </a>
+      <a href="#contact" class="nav-link" data-section="contact">
+        <span data-i18n="navContact">التواصل مباشر</span><span>05</span>
+      </a>
+    </nav>
+    
+    <div class="sidebar-controls">
+      <button class="ctrl-btn" onclick="toggleLanguage()" id="langBtn" title="Toggle Language">EN</button>
+      <button class="ctrl-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <div style="font-weight: 800;" data-i18n="topTitle">عمرو العواضي | بورتفوليو</div>
+    </div>
+
+    <!-- 1. الرئيسية -->
+    <section id="home" class="container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow" data-i18n="heroEyebrow">مصمم جرافيك · موشن · AI Content</span>
+          <h1 data-i18n="heroTitle">أبني هوية بصرية <br><span style="color:var(--gold);">تبدو أقوى قبل القراءة</span></h1>
+          <p class="lead" data-i18n="heroLead">أهلاً بك في مساحتي الإبداعية. هنا أدمج شغف الفن البصري مع أحدث تقنيات الذكاء الاصطناعي والمونتاج لإخراج أعمال ومحتوى رقمي يترك بصمة قوية ويحقق أهدافك التسويقية.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#portfolio-sections" data-i18n="heroCTA1">تصفح أقسام التصميم</a>
+            <a class="secondary-btn" href="#contact" data-i18n="heroCTA2">ابدأ مشروعك الآن</a>
+          </div>
+        </div>
+        <div class="glass-card">
+          <h3 style="margin-top:0; font-weight:800;" data-i18n="statsTitle">إحصائيات سريعة</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div style="border-right:3px solid var(--gold); padding-right:12px;"><strong>+3 <span data-i18n="years">سنوات</span></strong><br><span style="font-size:12px; color:var(--muted);" data-i18n="exp">خبرة عملية</span></div>
+            <div style="border-right:3px solid var(--green); padding-right:12px;"><strong>6 <span data-i18n="sects">أقسام</span></strong><br><span style="font-size:12px; color:var(--muted);" data-i18n="skills">تصميم ومونتاج</span></div>
+            <div style="border-right:3px solid var(--gold-2); padding-right:12px;"><strong>AI Prod</strong><br><span style="font-size:12px; color:var(--muted);" data-i18n="smartProd">إنتاج ذكي توليدي</span></div>
+            <div style="border-right:3px solid var(--text); padding-right:12px;"><strong>100%</strong><br><span style="font-size:12px; color:var(--muted);" data-i18n="identityText">التزام بالهوية</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. نبذة عني -->
+    <section id="about" class="container">
+      <div class="about-split">
+        <div>
+          <span class="eyebrow" data-i18n="aboutEyebrow">من أنا</span>
+          <h2 data-i18n="aboutTitle">واجهة مرتبة، قصة واضحة، وانطباع أعلى</h2>
+          <p style="font-size:17px; color:var(--muted); line-height:1.9;" data-i18n="aboutText">
+            بصفتي مصمم جرافيك ومطور ويب وشغوف بصناعة المحتوى الرقمي، أمتلك خبرة تمتد لأكثر من 3 سنوات في تحويل الأفكار الإبداعية إلى واقع مرئي ملموس. يتركز شغفي واهتمامي في دمج الفن التقليدي مع أحدث تقنيات الذكاء الاصطناعي (AI) لإنتاج محتوى سينمائي عالي الجودة, بدءاً من المنشورات التفاعلية للسوشال ميديا والمطبوعات الإعلانية، وصولاً إلى فيديوهات الموشن جرافيك والمونتاج الاحترافي.
+          </p>
+        </div>
+        <div class="glass-card" style="background:var(--bg-3);">
+          <h4 style="font-weight:800; margin-top:0;" data-i18n="pillarsTitle">ركائز العمل البصري الخاص بي:</h4>
+          <ul style="padding-right:20px; color:var(--muted); line-height:2.2; font-size:15px;" id="pillarsList">
+            <!-- يتم تعبئتها بالجافا سكريبت -->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. الخدمات -->
+    <section id="services" class="container">
+      <span class="eyebrow" data-i18n="servicesEyebrow">خدماتي المميزة</span>
+      <h2 data-i18n="servicesTitle">محاور العمل التي أتحرك من خلالها</h2>
+      <div class="services-grid" id="servicesContainer"></div>
+    </section>
+
+    <!-- 4. أقسام معرض الأعمال -->
+    <section id="portfolio-sections" class="container">
+      <span class="eyebrow" data-i18n="portEyebrow">معرض التصاميم</span>
+      <h2 data-i18n="portTitle">انقر على القسم لاستعراض الأعمال بصفحة خاصة</h2>
+      <div class="portfolio-pages-grid" id="portfolioSectionsContainer"></div>
+    </section>
+
+    <!-- 5. اتصل بي -->
+    <section id="contact" class="container">
+      <span class="eyebrow" data-i18n="contactEyebrow">اتصل بي</span>
+      <h2 data-i18n="contactTitle">جاهز لبدء مشروعك القادم؟ تواصل معي مباشرة</h2>
+      <div class="contact-grid">
+        <div class="premium-contact-card">
+          <div class="contact-badge wa-badge">💬</div>
+          <h3 data-i18n="waTitle">محادثة واتساب فورية</h3>
+          <p data-i18n="waDesc">مثالية للنقاشات السريعة، استشارات التصميم، والاتفاقيات العاجلة المباشرة.</p>
+          <a class="action-link-btn wa-link" href="https://wa.me/966558543794" target="_blank" data-i18n="waCTA">💬 انقر لبدء محادثة واتساب</a>
+        </div>
+        <div class="premium-contact-card">
+          <div class="contact-badge mail-badge">✉</div>
+          <h3 data-i18n="mailTitle">البريد الإلكتروني الرسمي</h3>
+          <p data-i18n="mailDesc">ممتاز لإرسال ملفات الشغل، تفاصيل العقود، أو طلبات عروض الأسعار الرسمية.</p>
+          <a class="action-link-btn mail-link" href="mailto:alwadymrw736@gmail.com?subject=طلب خدمات تصميم وإخراج مرئي" data-i18n="mailCTA">✉ انقر لفتح البريد الإلكتروني</a>
+        </div>
+        <div class="premium-contact-card">
+          <div class="contact-badge phone-badge">☎</div>
+          <h3 data-i18n="phoneTitle">اتصال هاتفي مباشر</h3>
+          <p data-i18n="phoneDesc">للمكالمات العاجلة والنقاشات المباشرة حول تفاصيل المشروع.</p>
+          <a class="action-link-btn phone-link" href="tel:+966558543794" data-i18n="phoneCTA">☎ اضغط للاتصال المباشر</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="container">
+      © 2026 عمرو العواضي — جميع الحقوق محفوظة | <span data-i18n="footerText">صُنع بشغف وإبداع</span>
+    </footer>
+  </main>
+
+  <!-- ==========================================
+       جافا سكريبت المحسّن بالكامل
+       ========================================== -->
+  <script>
+    const translations = {
+      ar: {
+        brandName: "عمرو العواضي", brandRole: "مصمم جرافيك ومحتوى مرئي",
+        navHome: "الرئيسية", navAbout: "نبذة عني", navServices: "الخدمات", navPortfolio: "أقسام الأعمال", navContact: "التواصل مباشر",
+        topTitle: "عمرو العواضي | بورتفوليو", heroEyebrow: "مصمم جرافيك · موشن · AI Content",
+        heroTitle: "أبني هوية بصرية <br><span style='color:var(--gold);'>تبدو أقوى قبل القراءة</span>",
+        heroLead: "أهلاً بك في مساحتي الإبداعية. هنا أدمج شغف الفن البصري مع أحدث تقنيات الذكاء الاصطناعي والمونتاج لإخراج أعمال ومحتوى رقمي يترك بصمة قوية ويحقق أهدافك التسويقية.",
+        heroCTA1: "تصفح أقسام التصميم", heroCTA2: "ابدأ مشروعك الآن",
+        statsTitle: "إحصائيات سريعة", years: "سنوات", exp: "خبرة عملية", sects: "أقسام", skills: "تصميم ومونتاج", smartProd: "إنتاج ذكي توليدي", identityText: "التزام بالهوية",
+        aboutEyebrow: "من أنا", aboutTitle: "واجهة مرتبة، قصة واضحة، وانطباع أعلى",
+        aboutText: "بصفتي مصمم جرافيك ومطور ويب وشغوف بصناعة المحتوى الرقمي، أمتلك خبرة تمتد لأكثر من 3 سنوات في تحويل الأفكار الإبداعية إلى واقع مرئي ملموس. يتركز شغفي واهتمامي في دمج الفن التقليدي مع أحدث تقنيات الذكاء الاصطناعي (AI) لإنتاج محتوى سينمائي عالي الجودة.",
+        pillarsTitle: "ركائز العمل البصري الخاص بي:",
+        pillars: ["تطوير محتوى يوقف تمرير الشاشة (Scroll).", "دمج أدوات الجيل الثالث للـ AI في التسويق.", "إخراج ملفات طباعة بأعلى دقة قياسية وقياسات مضبوطة."],
+        servicesEyebrow: "خدماتي المميزة", servicesTitle: "محاور العمل التي أتحرك من خلالها",
+        portEyebrow: "معرض التصاميم", portTitle: "انقر على القسم لاستعراض الأعمال بصفحة خاصة",
+        contactEyebrow: "اتصل بي", contactTitle: "جاهز لبدء مشروعك القادم؟ تواصل معي مباشرة",
+        waTitle: "محادثة واتساب فورية", waDesc: "مثالية للنقاشات السريعة، استشارات التصميم، والاتفاقيات العاجلة المباشرة.", waCTA: "💬 انقر لبدء محادثة واتساب",
+        mailTitle: "البريد الإلكتروني الرسمي", mailDesc: "ممتاز لإرسال ملفات الشغل، تفاصيل العقود، أو طلبات عروض الأسعار الرسمية.", mailCTA: "✉ انقر لفتح البريد الإلكتروني",
+        phoneTitle: "اتصال هاتفي مباشر", phoneDesc: "للمكالمات العاجلة والنقاشات المباشرة حول تفاصيل المشروع.", phoneCTA: "☎ اضغط للاتصال المباشر",
+        lightText: "فاتح", darkText: "داكن", footerText: "صُنع بشغف وإبداع"
+      },
+      en: {
+        brandName: "Amr Alawadhi", brandRole: "Graphic & Visual Designer",
+        navHome: "Home", navAbout: "About Me", navServices: "Services", navPortfolio: "Portfolio Sections", navContact: "Contact Direct",
+        topTitle: "Amr Alawadhi | Portfolio", heroEyebrow: "Graphic Design · Motion · AI Content",
+        heroTitle: "I build visual identities <br><span style='color:var(--gold);'>that hit harder before reading</span>",
+        heroLead: "Welcome to my creative space. Here, I blend the passion of visual art with the latest technologies of AI and video editing to deliver powerful digital content that achieves your marketing goals.",
+        heroCTA1: "Browse Design Sections", heroCTA2: "Start Your Project Now",
+        statsTitle: "Quick Stats", years: "Years", exp: "Practical Experience", sects: "Sections", skills: "Design & Editing", smartProd: "Generative Smart Production", identityText: "Identity Commitment",
+        aboutEyebrow: "About Me", aboutTitle: "Clean layout, clear story, higher impact",
+        aboutText: "As a graphic designer, web developer, and digital content enthusiast, I possess over 3 years of experience in turning creative ideas into tangible visual realities. My focus is on blending traditional art with the latest AI technologies to produce high-quality cinematic content.",
+        pillarsTitle: "Pillars of my visual work:",
+        pillars: ["Develop content that stops scrolling.", "Integrate third-generation AI tools in marketing.", "Export print files with highest standard quality and precise measurements."],
+        servicesEyebrow: "My Featured Services", servicesTitle: "The axes of work I move through",
+        portEyebrow: "Design Gallery", portTitle: "Click on the section to browse works on a dedicated page",
+        contactEyebrow: "Contact Me", contactTitle: "Ready to start your next project? Contact me directly",
+        waTitle: "Instant WhatsApp Chat", waDesc: "Perfect for quick discussions, design consultations, and urgent direct agreements.", waCTA: "💬 Click to start WhatsApp chat",
+        mailTitle: "Official Email", mailDesc: "Excellent for sending work files, contract details, or formal quote requests.", mailCTA: "✉ Click to open email",
+        phoneTitle: "Direct Phone Call", phoneDesc: "For urgent calls and direct discussions about project details.", phoneCTA: "☎ Click to call directly",
+        lightText: "Light", darkText: "Dark", footerText: "Made with passion and creativity"
+      }
+    };
+
+    // بيانات الخدمات والأقسام
+    const servicesData = {
+      ar: [
+        { title: "منشورات سوشال ميديا", desc: "محتوى متفاعل يوقف التمرير ويجذب الانتباه" },
+        { title: "مونتاج AI", desc: "تحرير فيديو ذكي بمساعدة الذكاء الاصطناعي" },
+        { title: "موشن جرافيك", desc: "رسوميات متحركة احترافية وجذابة" },
+        { title: "مونتاج فيديو", desc: "تحرير فيديو احترافي عالي الجودة" },
+        { title: "إعلانات AI", desc: "إعلانات مُنتجة بتقنيات الذكاء الاصطناعي" },
+        { title: "مشاريع للطباعة", desc: "تصاميم طباعية بأعلى مستويات الدقة" }
+      ],
+      en: [
+        { title: "Social Media Posts", desc: "Interactive content that stops scrolling and grabs attention" },
+        { title: "AI Editing", desc: "Smart video editing with artificial intelligence" },
+        { title: "Motion Graphics", desc: "Professional and attractive animated graphics" },
+        { title: "Video Editing", desc: "Professional high-quality video editing" },
+        { title: "AI Ads", desc: "Ads produced with artificial intelligence techniques" },
+        { title: "Print Projects", desc: "Print designs with the highest levels of accuracy" }
+      ]
+    };
+
+      const portfolioData = {
+      ar: [
+        { title: "منشورات سوشال ميديا", desc: "تصاميم متفاعلة للمنصات الرقمية", link: "social.html" },
+        { title: "مونتاج AI", desc: "فيديوهات محررة بقوة الذكاء الاصطناعي", link: "#" },
+        { title: "موشن جرافيك", desc: "رسوميات متحركة احترافية", link: "#" },
+        { title: "مونتاج فيديو", desc: "أعمال فيديو عالية الجودة", link: "#" },
+        { title: "إعلانات AI", desc: "حملات إعلانية ذكية", link: "#" },
+        { title: "مشاريع للطباعة", desc: "تصاميم طباعية احترافية", link: "#" }
+      ],
+      en: [
+        { title: "Social Media Posts", desc: "Interactive designs for digital platforms", link: "social_media_portfolio.html" },
+        { title: "AI Editing", desc: "Videos edited with AI power", link: "#" },
+        { title: "Motion Graphics", desc: "Professional animated graphics", link: "#" },
+        { title: "Video Editing", desc: "High-quality video works", link: "#" },
+        { title: "AI Ads", desc: "Smart advertising campaigns", link: "#" },
+        { title: "Print Projects", desc: "Professional print designs", link: "#" }
+      ]
+    };
+
+    // الحصول على اللغة الحالية
+    function getCurrentLang() {
+      return document.documentElement.getAttribute('data-lang') || 'ar';
+    }
+
+    // تحديث النصوص
+    function updateTexts() {
+      const lang = getCurrentLang();
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      updateServices();
+      updatePortfolio();
+      updatePillars();
+    }
+
+    // تحديث الخدمات
+    function updateServices() {
+      const lang = getCurrentLang();
+      const container = document.getElementById('servicesContainer');
+      container.innerHTML = '';
+      servicesData[lang].forEach(service => {
+        const card = document.createElement('div');
+        card.className = 'glass-card';
+        card.innerHTML = `<h3 style="color:var(--gold-2); font-weight:800; margin:0 0 12px 0;">${service.title}</h3><p style="font-size:14px; color:var(--muted); margin:0;">${service.desc}</p>`;
+        container.appendChild(card);
+      });
+    }
+
+    // تحديث معرض الأعمال
+    function updatePortfolio() {
+      const lang = getCurrentLang();
+      const container = document.getElementById('portfolioSectionsContainer');
+      container.innerHTML = '';
+      portfolioData[lang].forEach(item => {
+        const card = document.createElement('a');
+        card.href = item.link;
+        card.className = 'page-card glass-card';
+        card.innerHTML = `<h3>${item.title}</h3><p>${item.desc}</p>`;
+        if (item.link === '#') {
+          card.onclick = (e) => {
+            e.preventDefault();
+            alert(lang === 'ar' ? `قريباً: صفحة ${item.title}` : `Coming Soon: ${item.title} page`);
+          };
+        }
+        container.appendChild(card);
+      });
+    }
+
+    // تحديث الركائز
+    function updatePillars() {
+      const lang = getCurrentLang();
+      const list = document.getElementById('pillarsList');
+      list.innerHTML = '';
+      translations[lang].pillars.forEach(pillar => {
+        const li = document.createElement('li');
+        li.textContent = pillar;
+        list.appendChild(li);
+      });
+    }
+
+    // تبديل اللغة
+    function toggleLanguage() {
+      const html = document.documentElement;
+      const currentLang = html.getAttribute('data-lang');
+      const newLang = currentLang === 'ar' ? 'en' : 'ar';
+      const newDir = newLang === 'ar' ? 'rtl' : 'ltr';
+      
+      html.setAttribute('data-lang', newLang);
+      html.setAttribute('lang', newLang);
+      html.setAttribute('dir', newDir);
+      
+      document.body.style.fontFamily = newLang === 'ar' ? "var(--font-ar)" : "var(--font-en)";
+      
+      document.getElementById('langBtn').textContent = newLang === 'ar' ? 'EN' : 'AR';
+      
+      updateTexts();
+      localStorage.setItem('language', newLang);
+    }
+
+    // تبديل الوضع
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-theme', newTheme);
+      
+      const themeBtn = document.getElementById('themeBtn');
+      themeBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+      
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // تبديل القائمة الجانبية
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+      
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('show');
+    }
+
+    // إغلاق القائمة عند النقر على رابط
+    function closeSidebarOnNav() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+      
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('show');
+    }
+
+    // تحديث الرابط النشط
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        closeSidebarOnNav();
+      });
+    });
+
+    // استعادة الإعدادات المحفوظة
+    function restoreSettings() {
+      const savedLang = localStorage.getItem('language') || 'ar';
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      
+      if (savedLang !== 'ar') {
+        toggleLanguage();
+      }
+      
+      if (savedTheme !== 'dark') {
+        toggleTheme();
+      }
+    }
+
+    // تهيئة الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+      restoreSettings();
+      updateTexts();
+      
+      // إغلاق القائمة عند النقر خارجها
+      document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.querySelector('.menu-toggle');
+        if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+          sidebar.classList.remove('open');
+          document.getElementById('backdrop').classList.remove('show');
+        }
+      });
+    });
+
+    // تحديث الرابط النشط عند التمرير
+    window.addEventListener('scroll', function() {
+      const sections = document.querySelectorAll('section');
+      let current = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
