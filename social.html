@@ -114,8 +114,7 @@
 
     <div class="gallery-container">
         <div class="masonry-grid" id="mainGrid">
-            <!-- سيتم ملء المحتوى برمجياً -->
-        </div>
+            </div>
     </div>
 
     <div class="lightbox" id="lightbox" onclick="closeLightbox()">
@@ -126,8 +125,12 @@
     <script>
         const grid = document.getElementById('mainGrid');
         const maxFiles = 50; // الحد الأقصى لكل نوع
-        const formats = ['jpg', 'png', 'mp4'];
-        const folder = 'images/'; // تأكد أن صورك داخل مجلد اسمه images
+        
+        // دعم شامل لكل الامتدادات الممكنة (كبيرة وصغيرة) لعدم حدوث أخطاء بسبب الجوال
+        const formats = ['jpg', 'png', 'jpeg', 'mp4', 'JPG', 'PNG', 'JPEG', 'MP4', 'webp', 'WEBP'];
+        
+        // جعل المسار فارغاً لقراءة الصور من نفس مستوى الملف مباشرة
+        const folder = ''; 
 
         // وظيفة لإضافة عنصر للشبكة
         function createItem(src, type) {
@@ -149,7 +152,6 @@
 
             media.onload = () => {
                 item.style.display = 'block';
-                // تعديل الارتفاع بناءً على حجم الصورة (Masonry Effect)
                 const height = media.naturalHeight || 500;
                 const width = media.naturalWidth || 500;
                 const span = Math.ceil((height / width) * 25);
@@ -175,15 +177,14 @@
             grid.appendChild(item);
         }
 
-        // محاولة تحميل الملفات من 1 إلى 50
-        // محاولة تحميل الملفات من 1 إلى 50 لكل الصيغ
-for (let i = 1; i <= maxFiles; i++) {
-    formats.forEach(ext => {
-        const type = ext === 'mp4' ? 'video' : 'image';
-        // تم تصحيح الدمج هنا باستخدام الـ Backticks ` ` ليعمل الكود بشكل صحيح
-        createItem(`${folder}${i}.${ext}`, type);
-    });
-}
+        // محاولة تحميل الملفات من 1 إلى 50 بجميع الصيغ المتوفرة
+        for (let i = 1; i <= maxFiles; i++) {
+            formats.forEach(ext => {
+                const lowerExt = ext.toLowerCase();
+                const type = (lowerExt === 'mp4') ? 'video' : 'image';
+                createItem(`${folder}${i}.${ext}`, type);
+            });
+        }
 
         function openLightbox(src, type) {
             const container = document.getElementById('lightboxContainer');
